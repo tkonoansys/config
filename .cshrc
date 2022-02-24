@@ -1,45 +1,40 @@
-## Aliases.
-alias ll ls -lAF
-if ( -x `which vim` ) then
-    alias vi `which vim`
-endif
+alias ll        ls -lAF
+alias hist      history
 
-# Set default permission.
+# A righteous umask
 umask 022
 
-# Ignore EOF(Ctrl+D).
-set     ignoreeof
-# 
-set     autolist
-# Correct mistakes automatically.
-set autocorrect
-# Set command path (serenv also).
-set path = (/sbin /bin /usr/sbin /usr/bin /usr/games /usr/local/sbin /usr/local/bin $HOME/bin)
+set ignoreeof
+set autolist
 
-setenv EDITOR vim
-setenv PAGER more
-setenv BLOCKSIZE m
+#set path = (/sbin /bin /usr/sbin /usr/bin /usr/games /usr/local/sbin /usr/local/bin)
 
-setenv PACKAGEROOT ftp://ftp3.jp.freebsd.org
+setenv  EDITOR  vim
+setenv  PAGER   less
+setenv  BLOCKSIZE       K
 
-# Limit size of coredump.
-limit coredumpsize 0
-
-# Set command prompt.
 if ($?prompt) then
-        # An interactive shell -- set some stuff up
-        set filec
-        set history = 1000
-        set savehist = 1000
-        set mail = (/var/mail/$USER)
-        set promptchars = "%#"
-        if ( $?tcsh ) then
-                bindkey "^W" backward-delete-word
-                bindkey -k up history-search-backward
-                bindkey -k down history-search-forward
-
-                set prompt = "%{\e[00;34m%}[%n@%m:%~]%{\e[0m%}%# "
+    # An interactive shell -- set some stuff up
+    # Set up prompt
+    set promptchars = "%#"
+    if ("$version" =~ tcsh*) then
+        set prompt = "[%m:%c3] %n%# "
+    else
+        if ($uid) then
+            set prompt = "[$host] $user% "
         else
-                set prompt = "[`id -nu`@%m]%# "
-        endif
+            set prompt = "[$host] $user# "
+    endif
+    set filec
+    set history = 100
+    set savehist = 100
+    set mail = (/var/mail/$USER)
+    if ( $?tcsh ) then
+        bindkey "^W" backward-delete-word
+        bindkey -k up history-search-backward
+        bindkey -k down history-search-forward
+    endif
 endif
+
+## AnsysEM18.2 ##
+setenv NO_DEP_CHECK 1
