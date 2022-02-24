@@ -1,172 +1,166 @@
-"" General settings {{
-set nocompatible
-set backspace=start,eol,indent
-set whichwrap=b,s
-set mouse=
-set noswapfile
-set viminfo+=n$HOME/.vim/viminfo
-"" }}
+#
+## Zsh configurations.
+## You can check zsh options using "set -o" command.
+#
 
-"" vim-plug {{
-" curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-" PlugInstall [name ...] : Install plugins.
-" PlugUpdate [name ...] : Install or update plugins.
-" PlugUpgrade : Update vim-plug itself.
-" PlugClean : Remove unlisted plugins.
-silent! call plug#begin()
-Plug 'arcticicestudio/nord-vim'
-Plug 'itchyny/lightline.vim'
-call plug#end()
-"" }}
+#
+## General settings {{
+#
+# Set language.
+export LANG=en_US.UTF-8
 
-"" Language and encoding settings {{
-" Set the character encoding for the file of this buffer.
-set fileencoding=utf-8
+# Ignore Ctrl+S.
+stty stop undef
+stty start undef
 
-" Set the character encoding for the file of this buffer.
-set fileencoding=utf-8
+# Do not exit on end-of-file.
+setopt ignore_eof
 
-if has('unix')
-    set fileformat=unix
-    set fileformats=unix,dos,mac
-    set fileencodings=utf-8,cp932,euc-jp,latin
-elseif has('win32') || ('win64')
-    set fileformat=dos
-    set fileformats=dos,unix,mac
-    set fileencodings=utf-8,euc-jp,cp932,latin
-endif
+# Try to correct the spelling of commands.
+setopt correct
 
-" Treat East Asian Width class as ambiguous.
-set ambiwidth=double
-"" }}
+# Disable beep.
+setopt no_beep
 
-"" Color scheme settings {{
-" 24-bit color settings.
-if has('termguicolors') && $COLORTERM == 'truecolor'
-    set termguicolors
-    set cursorline
-    "set list
-    if &term =~# '^screen' || &term =~# '^tmux'
-        let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-        let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-    endif
-endif
+# Set emacs-like keybinding.
+bindkey -e
 
-" Set background scheme. Set this option before syntax highlighting.
-set background=dark
+# Language settings
+export LANG=en_US.UTF-8
+## }}
 
-" Nord scheme options.
-let g:nord_cursor_line_number_background=1
-let g:nord_italic=1
-let g:nord_italic_comments=1
-let g:nord_underline=1
-let g:nord_uniform_diff_background=1
-let g:nord_bold_vertical_split_line=1
+#
+## Color settings {{
+#
+# Set 24-bit color.
+if [[ -n ${WSLENV} ]] || [[ -n ${SSH_CLIENT} ]]; then
+    export COLORTERM='truecolor'
+fi
+## }}
 
-" Set color scheme.
-colorscheme nord
-"" }}
+#
+## Completion {{
+#
+# Set auto completion.
+autoload -Uz compinit && compinit -d ${XDG_CACHE_HOME}/zsh/zcompdump
 
-"" Search settings {{
-set ignorecase
-set smartcase
-set hlsearch
-set incsearch
-set wrapscan
-set wildmenu
-set wildmode=list:full
-"" }}
+# Set location of zcompcache directory.
+zstyle ':completion:*' cache-path ${XDG_CACHE_HOME}/zsh/zcompcache
 
-"" Tab settings {{
-" Insert spaces instead of tab.
-set expandtab
+# Colorize completion items.
+zstyle ':completion:*' list-colors di=34 ln=35 ex=31
 
-" Tab width.
-set tabstop=4
+# Highlight completion items.
+zstyle ':completion:*:default' menu select=2
 
-" Set how many spaces are entered when press tab key.
-set softtabstop=4
+# Try to make the completion list smaller.
+setopt list_packed
 
-" Width of indent when insert mode.
-set shiftwidth=4
+# Add a trailing slash to name of a directory instead of a space.
+setopt auto_param_slash
 
-" Round indent to multiple of shiftwidth.
-set shiftround
+# Remove trailing spaces after completion if needed.
+setopt auto_param_keys
 
-" Disable auto indent.
-set noautoindent
-set nosmartindent
-set nocindent
-set indentexpr=
-filetype indent off
-"" }}
+# Show the type of each file with a trailing identifying mark.
+setopt list_types
 
-"" Edit settings {{
-" Disable insert comment automatically.
-autocmd FileType * set formatoptions-=cro
+# Automatically use menu completion after the cecond consecutive rquest.
+setopt auto_menu
 
-" Share clipboard with OS.
-if has('clipboard')
-    set clipboard+=unnamed
-endif
+# Files beginning with a . be matched without explicitly specifying the dot.
+setopt globdots
 
-" Keep all windows size as same when add/remove.
-set equalalways
-"" }}
+# The cursor stays there and completion is done from both ends.
+setopt complete_in_word
 
-"" Display settings {{
-" Enable italic support since terminfo doesn't define the sitm.
-let &t_ZH="\e[3m"
-let &t_ZR="\e[23m"
+# Print eight bit characters literally in completion lists.
+setopt print_eight_bit
 
-" Show line number.
-set number
+# Allow comments even in interactive shells
+setopt interactive_comments
 
-" Show the line and column number of the cursor psition.
-set ruler
+# Disable beep when complete list displayed.
+setopt nolistbeep
+## }}
 
-" Show invisible characters
-set listchars=tab:<->,space:.,eol:↲
+#
+## History {{
+#
+# Location of history file.
+HISTFILE=${XDG_STATE_HOME}/zsh/history
 
-" Set title of the window to the value of titlestring.
-set notitle
+# Size of history file.
+HISTSIZE=10000
+SAVEHIST=10000
 
-" Line longer than the width of the window will wrap.
-set wrap
+# Share command history.
+setopt share_history
 
-" Every wrapped line will continue visually indented.
-set breakindent
+# Do not enter command lines into the history list
+# if they are duplicates of the previous event.
+setopt hist_ignore_dups
 
-" Show command in the last line of screen.
-set showcmd
+# If a new command line being added to the history list
+# duplicates an older one, the older command is removed.
+setopt hist_ignore_all_dups
 
-" Disable visual bells.
-set noerrorbells
-set novisualbell
-"" }}
+# Remove command lines from the history list
+# when the first charactoer on the line is a space.
+setopt hist_ignore_space
 
-"" Syntax settings {{
-" Enable syntax highlighting.
-syntax enable
-"" }}
+# Remove superfluous blanks from each command line
+# being added to the history list.
+setopt hist_reduce_blanks
+## }}
 
-"" Statusline settings {{
-" Always shows status line.
-set laststatus=2
+#
+## Prompt settings {{
+#
+PROMPT="%B%F{034}[%n@%m%F{004}:%~%F{034}]%#%f%b "
+PROMPT2="%F{034}[%_]%#%k%f "
+SPROMPT="%F{034}%r is correct? [n,y,a,e]:%k%f "
+## }}
 
-" Load lightline components.
-let g:lightline={'colorscheme': 'nord'}
-let g:lightline.active={
- \  'left': [['mode', 'paste'], ['readonly', 'filepath', 'modified']],
- \  'right': [['line'], ['filetype'], ['fileformat', 'fileencoding']]
- \ }
-let g:lightline.component={
- \  'filepath': '%f',
- \  'line': '%l/%LL'
- \ }
+#
+## Command specific settings {{
+#
+# Disable less history.
+export LESSHISTFILE=-
 
-" Hide current mode if lightline.vim is set.
-if exists("g:lightline")
-    set noshowmode
-endif
-"" }}
+# ls color.
+case ${OSTYPE} in
+    linux*)
+        alias ls='ls --color=auto'
+        if [[ -f ${XDG_CONFIG_HOME}/dir_colors ]]; then
+            eval $(dircolors ${XDG_CONFIG_HOME}/dir_colors)
+        else
+            export LS_COLORS='di=01;94'
+        fi
+        ;;
+esac
+
+# Let GPG to use pinentry TTY.
+(( ${+commands[gpg]} )) && export GPG_TTY=${TTY}
+##}}
+
+#
+## Aliases {{
+#
+alias ll='ls -lAF'
+if (( ${+commands[nvim]} )); then
+    alias vi='nvim'
+    alias vim='nvim'
+    export EDITOR='nvim'
+elif (( ${+commands[vim]} )); then
+    alias vi='vim'
+    export EDITOR='vim'
+fi
+if (( ${+commands[tmux]} )); then
+    if [[ $(tmux -V|grep -o -E "([0-9]+\.)([0-9])") -lt 3.1 ]]; then
+        alias tmux="tmux -f ${XDG_CONFIG_HOME}/tmux/tmux.conf"
+    fi
+    [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
+    export TMUX_TMPDIR=/tmp
+fi
+## }}
