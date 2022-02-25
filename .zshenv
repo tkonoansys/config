@@ -26,6 +26,8 @@
 # Prepare zsh directory for zcompdump and zcompcache.
 [[ ! -d ${XDG_CACHE_HOME}/zsh ]] && mkdir ${XDG_CACHE_HOME}/zsh
 
+[[ -d ${ZDOTDIR}/functions ]] && export FPATH="${ZDOTDIR}/functions:$FPATH"
+
 # Disable .zsh_sessions.
 SHELL_SESSIONS_DISABLE=1
 
