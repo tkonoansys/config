@@ -144,6 +144,10 @@ esac
 (( ${+commands[gpg]} )) && export GPG_TTY=${TTY}
 ##}}
 
+if (( ${+commands[hg]} )) && [ -e ${^fpath}/vcs-prompt.zsh(N) ]; then
+    autoload -Uz vcs-prompt.zsh && vcs-prompt.zsh
+fi             
+
 #
 ## Aliases {{
 #
