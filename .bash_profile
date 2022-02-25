@@ -1,4 +1,3 @@
-cat .bash_profile
 # .bash_profile
 # Offloading to zsh if exists.
 if [[ -x /bin/zsh ]]; then
