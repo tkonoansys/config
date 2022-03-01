@@ -2,6 +2,8 @@
 # Offloading to zsh if exists.
 if [[ -x /bin/zsh ]]; then
     exec /bin/zsh -l
+elif [[ -x $HOME/.local/bin/zsh ]]; then
+    exec $HOME/.local/bin/zsh -l
 fi
 
 # Get the aliases and functions.
