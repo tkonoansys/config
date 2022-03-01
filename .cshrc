@@ -18,12 +18,12 @@ if ($?prompt) then
     # Set up prompt
     set promptchars = "%#"
     if ("$version" =~ tcsh*) then
-        set prompt = "[%m:%c3] %n%# "
+        set prompt = "[%n@%m:%c3] %# "
     else
         if ($uid) then
-            set prompt = "[$host] $user% "
+            set prompt = "[$user@$host] % "
         else
-            set prompt = "[$host] $user# "
+            set prompt = "[$user@$host] # "
     endif
     set filec
     set history = 100
