@@ -33,12 +33,8 @@ fi
 #
 case ${OSTYPE} in
     linux*)
-        if [[ -d /usr/local/sbin ]]; then
-            export PATH=/usr/local/sbin:${PATH}
-        fi
-        if [[ -d ${HOME}/.local/bin ]]; then
-            export PATH=${HOME}/.local/bin:${PATH}
-        fi
+        [[ -d /usr/local/sbin ]] && export PATH=/usr/local/sbin:${PATH}
+        [[ -d ${HOME}/.local/bin ]] && export PATH=${HOME}/.local/bin:${PATH}
         ;;
 esac
 ## }}
