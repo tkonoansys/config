@@ -7,10 +7,13 @@ if ($host.Name -eq 'ConsoleHost') {
     if (Get-Module -ListAvailable -Name 'PSReadLine') {
         Import-Module PSReadLine
         Set-PSReadlineOption -EditMode Emacs
-        Set-PSReadLineOption -PredictionSource History
+        Set-PSReadLineOption -PredictionSource History -PredictionViewStyle ListView
     }
     if (get-Module -ListAvailable -Name 'posh-git') {
         Import-Module posh-git
+    }
+    if (Get-Module -ListAvailable -Name 'Get-ChildItemColor') {
+        Import-Module Get-ChildItemColor
     }
 } elseif ($host.Name -eq 'Vusual Studio Code Host') {
     if (Get-Module -ListAvailable -Name 'PSReadLine') {
