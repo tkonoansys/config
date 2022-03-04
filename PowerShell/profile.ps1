@@ -25,7 +25,9 @@ if ($host.Name -eq 'ConsoleHost') {
     }
 }
 
+#
 ## Defining functions ##
+#
 
 function prompt () {
     [string]$RgbPromptColor1 = '0x00BFFF' # DeepSkyBlue
