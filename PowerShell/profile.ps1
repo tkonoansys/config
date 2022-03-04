@@ -33,6 +33,7 @@ function prompt () {
 
     [string]$PromptUsername = ($env:USERNAME).ToLower()
     [string]$PromptComputername = ($env:COMPUTERNAME).ToLower()
+    [string]$isAdmin = '>'
 
     if (Get-Module -Name 'posh-git') {
         $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
