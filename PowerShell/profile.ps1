@@ -1,7 +1,10 @@
-## Each hosts settings ##
-# How to install "posh-git" #
-#Install-Module -Name posh-git -Scope CurrentUser -Force
-<#https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt#>
+#
+## PowerShell modules ##
+#
+# Install-Module -Name posh-git -Scope CurrentUser -Force
+# https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
+# Install-Module -Name BurntToast -Scope CurrentUser
+# https://github.com/Windos/BurntToast
 
 if ($host.Name -eq 'ConsoleHost') {
     if (Get-Module -ListAvailable -Name 'PSReadLine') {
