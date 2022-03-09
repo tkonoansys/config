@@ -152,11 +152,7 @@ fi
 ## Aliases {{
 #
 alias ll='ls -lAF'
-if (( ${+commands[nvim]} )); then
-    alias vi='nvim'
-    alias vim='nvim'
-    export EDITOR='nvim'
-elif (( ${+commands[vim]} )); then
+if (( ${+commands[vim]} )); then
     alias vi='vim'
     export EDITOR='vim'
 fi
