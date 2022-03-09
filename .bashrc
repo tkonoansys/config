@@ -75,9 +75,6 @@ export LESSHISTFILE=-
 
 # ls color.
 case ${OSTYPE} in
-    darwin*)
-        alias ls='ls -G'
-        ;;
     linux*)
         alias ls='ls --color=auto'
         if [[ -f ${HOME}/.config/dir_colors ]]; then
