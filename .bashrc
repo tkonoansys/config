@@ -108,9 +108,3 @@ if type 'tmux' > /dev/null 2>&1; then
     [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
     export TMUX_TMPDIR=/tmp
 fi
-
-# Load .bash_aliases if exists.
-if [ -f ${HOME}/.bash_aliases ]; then
-    . ${HOME}/.bash_aliases
-fi
-## }}
