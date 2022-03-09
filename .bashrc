@@ -98,10 +98,7 @@ fi
 ## Aliases {{
 #
 alias ll='ls -lAF'
-if type 'nvim' > /dev/null 2>&1; then
-    alias vi='nvim'
-    alias vim='nvim'
-elif type 'vim' > /dev/null 2>&1; then
+if type 'vim' > /dev/null 2>&1; then
     alias vi='vim'
 fi
 if type 'tmux' > /dev/null 2>&1; then
