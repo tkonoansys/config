@@ -6,11 +6,6 @@ elif [[ -x $HOME/.local/bin/zsh ]]; then
     exec $HOME/.local/bin/zsh -l
 fi
 
-# Get the aliases and functions.
-if [[ -f ~/.bashrc ]]; then
-    . ~/.bashrc
-fi
-
 #
 ## XDG base directories {{
 #
@@ -37,4 +32,12 @@ case ${OSTYPE} in
         [[ -d ${HOME}/.local/bin ]] && export PATH=${HOME}/.local/bin:${PATH}
         ;;
 esac
+## }}
+
+#
+## Load .bashrc {{
+#
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
 ## }}
