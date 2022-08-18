@@ -1,0 +1,14 @@
+[user]
+        name = Tsubura Kono
+        email = tsubura.kono@ansys.com
+[color]
+        ui = auto
+[core]
+        editor = vim
+        autocrlf = input
+        quotepath = false
+        ignorecase = false
+        excludesfile = /home/staff/tkono/.config/git/ignore
+[pull]
+        rebase = false
+        ff = only
