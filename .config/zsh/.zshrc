@@ -24,9 +24,6 @@ setopt no_beep
 
 # Set emacs-like keybinding.
 bindkey -e
-
-# Language settings
-export LANG=en_US.UTF-8
 ## }}
 
 #
