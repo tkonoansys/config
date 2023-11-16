@@ -31,28 +31,3 @@ SHELL_SESSIONS_DISABLE=1
 
 limit coredumpsize 0
 ## }}
-
-#
-## Set command path {{
-#
-add_path(){
-    if [[ -d $1 ]]; then
-        export PATH=$1:${PATH}
-    fi
-}
-
-case ${OSTYPE} in
-    linux*)
-        # Add a path for local bin.
-        add_path "${HOME}/.local/bin"
-        # Add path for snap
-        add_path "/snap/bin"
-        # Set npm to use XDG_CONFIG_HOME.
-        export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
-        # Add a path for npm
-        add_path "${XDG_DATA_HOME}/npm/bin"
-        # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
-        export skip_global_compinit=1
-        ;;
-esac
-## }}
