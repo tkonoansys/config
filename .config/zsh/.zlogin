@@ -1,11 +1,16 @@
-cat .config/zsh/.zlogin
 case ${OSTYPE} in
-    linux*)
-    ## Start ssh-agent.
-        if (( $+commands[ssh-agent] )) && [ -z ${SSH_AUTH_SOCK} ]; then
+    darwin*)
+        ## Load SSH keys from Keychain.
+        if (( $+commands[/usr/bin/ssh-add] )); then
             if ls ${HOME}/.ssh | grep -q 'id_*'; then
-                exec ssh-agent zsh
+                /usr/bin/ssh-add --apple-load-keychain
             fi
+        fi
+        ;;
+    linux*)
+        ## Start ssh-agent.
+        if (( $+commands[ssh-agent] )) && (( -! $+SSH_AUTH_SOCK )); then
+            ls ${HOME}/.ssh | grep -q 'id_*' && exec ssh-agent zsh
         fi
         ;;
 esac
