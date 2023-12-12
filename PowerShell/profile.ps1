@@ -3,20 +3,15 @@
 #
 # Install-Module -Name posh-git -Scope CurrentUser -Force
 # https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
-# Install-Module -Name BurntToast -Scope CurrentUser
-# https://github.com/Windos/BurntToast
 
 if ($host.Name -eq 'ConsoleHost') {
-    if (Get-Module -ListAvailable -Name 'PSReadLine') {
+    if (Get-InstalledPSResource -Name 'PSReadLine') {
         Import-Module PSReadLine
         Set-PSReadlineOption -EditMode Emacs
-        Set-PSReadLineOption -PredictionSource History -PredictionViewStyle ListView
+        Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
     }
-    if (get-Module -ListAvailable -Name 'posh-git') {
+    if (Get-InstalledPSResource -Name 'posh-git') {
         Import-Module posh-git
-    }
-    if (Get-Module -ListAvailable -Name 'Get-ChildItemColor') {
-        Import-Module Get-ChildItemColor
     }
 } elseif ($host.Name -eq 'Vusual Studio Code Host') {
     if (Get-Module -ListAvailable -Name 'PSReadLine') {
