@@ -1,9 +1,4 @@
 #
-## Zsh configurations.
-## You can check zsh options using "set -o" command.
-#
-
-#
 ## General settings {{
 #
 # Set language.
