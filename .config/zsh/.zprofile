@@ -24,9 +24,10 @@ case ${OSTYPE} in
         [[ -d ${HOME}/.local/bin ]] && add_path "${HOME}/.local/bin"
         # Add path for snap
         [[ -d /snap/bin ]] && add_path "/snap/bin"
-        # Load nvm.
-        export NVM_DIR="$HOME/.config/nvm"
-        [[ -s ${NVM_DIR}/nvm.sh ]] && \. "$NVM_DIR/nvm.sh"
+        # zsh-nvm
+        export NVM_DIR=${XDG_CONFIG_HOME}/nvm
+        # npm
+        [[ -d ${XDG_CONFIG_HOME}/npm ]] && export NPM_CONFIG_USERCONFIG=${XDG_CONFIG_HOME}/npm/npmrc
         # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
         export skip_global_compinit=1
         # Remove duplicated path frim ${PATH}.
