@@ -51,17 +51,3 @@ function prompt () {
         Return " "
     }
 }
-
-function which {
-        [CmdletBinding()]
-    param (
-        [Parameter(Mandatory=$true)]
-        [string]
-        $CommandName
-    )
-    begin {}
-    Process {
-        (Get-Command -ErrorAction SilentlyContinue -Name $CommandName).Definition
-    }
-    end {}
-}
