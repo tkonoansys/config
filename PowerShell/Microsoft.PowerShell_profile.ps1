@@ -10,11 +10,11 @@ if ($host.Name -eq 'ConsoleHost') {
         Set-PSReadlineOption -EditMode Emacs
         Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
     }
-    if (Get-InstalledPSResource -Name 'posh-git') {
-        Import-Module posh-git
-    }
+#    if (Get-InstalledPSResource -Name 'posh-git') {
+#        Import-Module posh-git
+#    }
 } elseif ($host.Name -eq 'Vusual Studio Code Host') {
-    if (Get-Module -ListAvailable -Name 'PSReadLine') {
+    if (Get-InstalledPSResource -Name 'PSReadLine') {
         Import-Module PSReadline
         #Set-PSReadlineOption -EditMode Emacs
     }
