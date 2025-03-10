@@ -17,6 +17,9 @@ setopt correct
 # Disable beep.
 setopt no_beep
 
+# Suppress "no matches" message.
+setopt nonomatch
+
 # Set emacs-like keybinding.
 bindkey -e
 ## }}
@@ -132,27 +135,43 @@ case ${OSTYPE} in
         ;;
 esac
 
-# Let GPG to use pinentry TTY.
-(( ${+commands[gpg]} )) && export GPG_TTY=${TTY}
-##}}
+# Don't print any hits of Homebrew.
+if (( ${+commands[brew]} )); then
+    export HOMEBREW_NO_ENV_HINTS=1
+fi
 
-if (( ${+commands[hg]} )) && [ -e ${^fpath}/vcs-prompt.zsh(N) ]; then
-    autoload -Uz vcs-prompt.zsh && vcs-prompt.zsh
-fi             
+# Python
+export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
+export PYTHONPYCACHEPREFIX=$XDG_CACHE_HOME/python
+export PYTHONUSERBASE=$XDG_DATA_HOME/python
+
+# pyenv
+if (( ${+commands[pyenv]} )); then
+    [[ -d $HOME/.pyenv ]] && export PYENV_ROOT="$HOME/.pyenv"
+    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
+# }}
 
 #
 ## Aliases {{
 #
 alias ll='ls -lAF'
-if (( ${+commands[vim]} )); then
+if (( ${+commands[nvim]} )); then
+    alias vi='nvim'
+    alias vim='nvim'
+    export EDITOR='nvim'
+elif (( ${+commands[vim]} )); then
     alias vi='vim'
     export EDITOR='vim'
 fi
 if (( ${+commands[tmux]} )); then
-    if [[ $(tmux -V|grep -o -E "([0-9]+\.)([0-9])") -lt 3.1 ]]; then
-        alias tmux="tmux -f ${XDG_CONFIG_HOME}/tmux/tmux.conf"
-    fi
     [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
     export TMUX_TMPDIR=/tmp
 fi
 ## }}
+
+# End of zprof
+#if (which zprof > /dev/null) ;then
+#  zprof | less
+#fi
