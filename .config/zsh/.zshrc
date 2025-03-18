@@ -141,15 +141,21 @@ if (( ${+commands[brew]} )); then
 fi
 
 # Python
-export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
-export PYTHONPYCACHEPREFIX=$XDG_CACHE_HOME/python
-export PYTHONUSERBASE=$XDG_DATA_HOME/python
+export PYTHON_HISTORY=${XDG_STATE_HOME}/python_history
+export PYTHONPYCACHEPREFIX=${XDG_CACHE_HOME}/python
+export PYTHONUSERBASE=${XDG_DATA_HOME}/python
 
 # pyenv
 if (( ${+commands[pyenv]} )); then
-    [[ -d $HOME/.pyenv ]] && export PYENV_ROOT="$HOME/.pyenv"
-    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+    [[ ! -d ${XDG_DATA_HOME}/pyenv ]] && mkdir ${XDG_DATA_HOME}/pyenv
+    export PYENV_ROOT="${XDG_DATA_HOME}/pyenv"
     eval "$(pyenv init -)"
+fi
+
+# npm
+if [ -e ${^fpath}/zsh-nvm.zsh(N) ]; then
+    [[ ! -d ${XDG_CONFIG_HOME}/npm ]] && mkdir ${XDG_CONFIG_HOME}/npm
+    export NPM_CONFIG_USERCONFIG=${XDG_CONFIG_HOME}/npm/npmrc
 fi
 # }}
 
