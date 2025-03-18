@@ -22,7 +22,7 @@ add_path "${HOME}/.local/bin"
 # Add path for snap
 add_path "/snap/bin"
 # nvm
-NVM_DIR=${XDG_CONFIG_HOME}/nvm
+export NVM_DIR=${XDG_CONFIG_HOME}/nvm
 # Remove duplicated path frim ${PATH}.
 typeset -U path
 ## }}
