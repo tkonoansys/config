@@ -1,15 +1,24 @@
+
 #
 ## PowerShell modules ##
 #
 # Install-Module -Name posh-git -Scope CurrentUser -Force
 # https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
 
-[string]$CWD = (Get-Location).Path
+[string]$CWD = $PWD.Path
 
 if (Get-InstalledPSResource -Name 'PSReadLine') {
     Import-Module PSReadLine
-    Set-PSReadlineOption -EditMode Emacs
-    Set-PSReadLineOption -PredictionSource HistoryAndPlugin -PredictionViewStyle ListView
+    $PSROptions = @{
+        EditMode = "Emacs"
+        PredictionSource = "HistoryAndPlugin"
+        PredictionViewStyle = "ListView"
+        Colors = @{
+            Operator = "`e[36m"
+            Parameter = "`e[36m"
+        }
+    }
+    Set-PSReadLineOption @PSROptions
 }
 
 if (Get-InstalledPSResource -Name 'posh-git') {
