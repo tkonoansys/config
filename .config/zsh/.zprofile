@@ -22,8 +22,6 @@ esac
 
 # Add path for local bin.
 add_path "${HOME}/.local/bin"
-# nvm
-export NVM_DIR=${XDG_CONFIG_HOME}/nvm
 # Remove duplicated path frim ${PATH}.
 typeset -U path
 ## }}
