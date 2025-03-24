@@ -7,11 +7,14 @@ add_path(){
 
 case ${OSTYPE} in
     darwin*)
-        # Add path for brew Apple Silicon.
-        add_path "/opt/homebrew/sbin"
-        add_path "/opt/homebrew/bin"
+        # Add homebrew environments for Apple Silicon.
+        if [[ -d /opt/homebrew ]]; then
+            eval $(/opt/homebrew/bin/brew shellenv)
+        fi
         ;;
     linux*)
+        # Add path for snap
+        add_path "/snap/bin"
         # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
         export skip_global_compinit=1
         ;;
@@ -19,8 +22,6 @@ esac
 
 # Add path for local bin.
 add_path "${HOME}/.local/bin"
-# Add path for snap
-add_path "/snap/bin"
 # nvm
 export NVM_DIR=${XDG_CONFIG_HOME}/nvm
 # Remove duplicated path frim ${PATH}.
