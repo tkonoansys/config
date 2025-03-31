@@ -141,7 +141,8 @@ setopt hist_reduce_blanks
 #
 ## Prompt settings {{
 #
-PROMPT="%B%F{034}[%n@%m%F{004}:%~%F{034}]%#%f%b "
+#PROMPT="%B%F{034}[%n@%m%F{004}:%~%F{034}]%#%f%b "
+PROMPT="%F{004}"$'\ue0b6'"%f%B%K{004}%F{023}%n@%m%k%b%K{023}%F{004}"$'\ue0b4'"%f%k%K{023}%F{044} %~%f%k%F{023}"$'\ue0b4'"%f "
 PROMPT2="%F{034}[%_]%#%k%f "
 SPROMPT="%F{034}%r is correct? [n,y,a,e]:%k%f "
 ## }}
