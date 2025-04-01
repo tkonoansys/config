@@ -2,6 +2,10 @@
 if (Get-InstalledPSResource -Name 'PSReadLine') {
     Import-Module PSReadLine
 
+    if (Get-InstalledPSResource -Name 'CompletionPredictor') {
+        Import-Module -Name CompletionPredictor
+    }
+    
     $PSROptions = @{
         EditMode = "Emacs"
         PredictionSource = "HistoryAndPlugin"
