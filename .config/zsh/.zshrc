@@ -1,16 +1,5 @@
 ## OS specific settings before loading plugins {{
 case ${OSTYPE} in
-    darwin*)
-        # Add homebrew environments for Apple Silicon.
-        if [[ -x /opt/homebrew/bin/brew ]]; then
-            eval $(/opt/homebrew/bin/brew shellenv)
-            # Don't print any Homebrew hints.
-            export HOMEBREW_NO_ENV_HINTS=1
-            # ls color.
-            alias ls='ls -Gh'
-            export LSCOLORS=Exfxcxdxbxegedabagacad
-        fi
-        ;;
     linux*)
         # Add path for snap
         [[ -d /snap/bin ]] && export PATH=/snap/bin:${PATH}
