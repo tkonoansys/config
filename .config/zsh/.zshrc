@@ -26,11 +26,8 @@ case ${OSTYPE} in
         ;;
 esac
 
-# Set NVM_DIR before loading nvm plugin.
-export NVM_DIR=${XDG_CONFIG_HOME}/nvm
-
 # Add path for local bin.
-add_path "${HOME}/.local/bin"
+[[ -d ${HOME}/.local/bin ]] && export PATH=${HOME}/.local/bin:${PATH}
 ## }}
 
 #
