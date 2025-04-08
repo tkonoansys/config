@@ -1,22 +1,28 @@
-## Application specific settings before loading plugins {{
-add_path(){
-    if [[ -d $1 ]]; then
-        export PATH=$1:${PATH}
-    fi
-}
-
+## OS specific settings before loading plugins {{
 case ${OSTYPE} in
     darwin*)
         # Add homebrew environments for Apple Silicon.
         if [[ -x /opt/homebrew/bin/brew ]]; then
             eval $(/opt/homebrew/bin/brew shellenv)
+            # Don't print any Homebrew hints.
+            export HOMEBREW_NO_ENV_HINTS=1
+            # ls color.
+            alias ls='ls -Gh'
+            export LSCOLORS=Exfxcxdxbxegedabagacad
         fi
         ;;
     linux*)
         # Add path for snap
-        add_path "/snap/bin"
+        [[ -d /snap/bin ]] && export PATH=/snap/bin:${PATH}
         # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
         export skip_global_compinit=1
+        # ls color.
+        alias ls='ls -h --color=auto --time-style=long-iso'
+        if [[ -f ${XDG_CONFIG_HOME}/dir_colors ]]; then
+            eval $(dircolors ${XDG_CONFIG_HOME}/dir_colors)
+        else
+            export LS_COLORS='di=01;34'
+        fi
         ;;
 esac
 
@@ -57,9 +63,7 @@ bindkey -e
 ## Color settings {{
 #
 # Set 24-bit color.
-if [[ -n ${WSLENV} ]] || [[ -n ${SSH_CLIENT} ]]; then
-    export COLORTERM='truecolor'
-fi
+[[ -n ${WSLENV} ]] || [[ -n ${SSH_CLIENT} ]] && export COLORTERM='truecolor'
 ## }}
 
 #
@@ -150,23 +154,6 @@ SPROMPT="%F{034}%r is correct? [n,y,a,e]:%k%f "
 # Disable less history.
 export LESSHISTFILE=-
 
-# ls color.
-case ${OSTYPE} in
-    linux*)
-        alias ls='ls --color=auto'
-        if [[ -f ${XDG_CONFIG_HOME}/dir_colors ]]; then
-            eval $(dircolors ${XDG_CONFIG_HOME}/dir_colors)
-        else
-            export LS_COLORS='di=01;34'
-        fi
-        ;;
-esac
-
-# Don't print any hits of Homebrew.
-if (( ${+commands[brew]} )); then
-    export HOMEBREW_NO_ENV_HINTS=1
-fi
-
 # Python
 export PYTHON_HISTORY=${XDG_STATE_HOME}/python_history
 export PYTHONPYCACHEPREFIX=${XDG_CACHE_HOME}/python
@@ -177,12 +164,6 @@ if (( ${+commands[pyenv]} )); then
     [[ ! -d ${XDG_DATA_HOME}/pyenv ]] && mkdir ${XDG_DATA_HOME}/pyenv
     export PYENV_ROOT="${XDG_DATA_HOME}/pyenv"
     eval "$(pyenv init -)"
-fi
-
-# npm
-if [ -e ${^fpath}/zsh-nvm.zsh(N) ]; then
-    [[ ! -d ${XDG_CONFIG_HOME}/npm ]] && mkdir ${XDG_CONFIG_HOME}/npm
-    export NPM_CONFIG_USERCONFIG=${XDG_CONFIG_HOME}/npm/npmrc
 fi
 # }}
 
@@ -202,7 +183,13 @@ if (( ${+commands[tmux]} )); then
     [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
     export TMUX_TMPDIR=/tmp
 fi
+if (( ${+commands[fdfind]} )); then
+    alias fd='fdfind'
+fi
 ## }}
+
+# Remove duplicated path frim ${PATH}.
+typeset -U path
 
 # End of zprof
 #if (which zprof > /dev/null) ;then
