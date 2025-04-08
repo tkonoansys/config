@@ -55,6 +55,9 @@ setopt no_beep
 # Suppress "no matches" message.
 setopt nonomatch
 
+# Disable core dump.
+limit coredumpsize 0
+
 # Set emacs-like keybinding.
 bindkey -e
 ## }}
