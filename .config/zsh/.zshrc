@@ -102,7 +102,7 @@ setopt nolistbeep
 ## History {{
 #
 # Location of history file.
-HISTFILE=${XDG_STATE_HOME}/zsh/history
+HISTFILE="${XDG_STATE_HOME}/zsh/history"
 
 # Size of history file.
 HISTSIZE=10000
@@ -141,12 +141,12 @@ SPROMPT="%F{034}%r is correct? [n,y,a,e]:%k%f "
 ## Command specific settings {{
 #
 # Disable less history.
-export LESSHISTFILE=-
+export LESSHISTFILE="-"
 
 # Python
-export PYTHON_HISTORY=${XDG_STATE_HOME}/python_history
-export PYTHONPYCACHEPREFIX=${XDG_CACHE_HOME}/python
-export PYTHONUSERBASE=${XDG_DATA_HOME}/python
+export PYTHON_HISTORY="${XDG_STATE_HOME}/python_history"
+export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python"
+export PYTHONUSERBASE="${XDG_DATA_HOME}/python"
 
 # pyenv
 if (( ${+commands[pyenv]} )); then
