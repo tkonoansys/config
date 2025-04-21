@@ -1,93 +1,186 @@
-##Requires -Version 7
+## OS specific settings before loading plugins {{
+case ${OSTYPE} in
+    linux*)
+        # Add path for snap
+        [[ -d "/snap/bin" ]] && export PATH="/snap/bin:${PATH}"
+        # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
+        export skip_global_compinit=1
+        # ls color.
+        alias ls='ls -h --color=auto --time-style=long-iso'
+        if [[ -f "${XDG_CONFIG_HOME}/dir_colors" ]]; then
+            eval $(dircolors "${XDG_CONFIG_HOME}/dir_colors")
+        else
+            export LS_COLORS='di=01;34'
+        fi
+        ;;
+esac
 
-# Set Console output encoding to UTF-8.
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# Add path for local bin.
+[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
+## }}
 
-# Configure PSReadLine.
-if (Get-InstalledPSResource -Name 'PSReadLine') {
-    Import-Module -Name PSReadLine
+#
+## General settings {{
+#
+# Set language.
+export LANG=en_US.UTF-8
 
-    if (Get-InstalledPSResource -Name 'CompletionPredictor') {
-        Import-Module -Name CompletionPredictor
-    } else {
-        Install-Module -Name CompletionPredictor -Scope CurrentUser -Force `
-        && Import-Module -Name CompletionPredictor
-    }
+# Ignore Ctrl+S.
+stty stop undef
+stty start undef
 
-    $PSROptions = @{
-        EditMode = "Emacs"
-        PredictionSource = "HistoryAndPlugin"
-        PredictionViewStyle = "ListView"
-        Colors = @{
-            Operator = "`e[36m"
-            Parameter = "`e[36m"
-        }
-    }
-    Set-PSReadLineOption @PSROptions
-}
+# Do not exit on end-of-file.
+setopt ignore_eof
 
-if (Get-InstalledPSResource -Name 'posh-git') {
-    Import-Module -Name posh-git
-} else {
-    Install-Module -Name posh-git -Scope CurrentUser -Force `
-    && Import-Module -Name posh-git
-}
-# https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
-$GitPromptSettings.DefaultPromptPrefix.Text = "PS "
-$GitPromptSettings.DefaultPromptPrefix.ForegroundColor = '0x00BFFF' # DeepSkyBlue
-$GitPromptSettings.DefaultPromptPath.ForegroundColor = '0x40E0D0' # Turquoise
-$GitPromptSettings.DefaultPromptSuffix.ForegroundColor = '0x00BFFF' # DeepSkyBlue
+# Try to correct the spelling of commands.
+setopt correct
 
-if ((([System.Diagnostics.Process]::GetCurrentProcess()).Parent).ProcessName -eq 'WindowsTerminal') {
-    $Global:LastHistoryId = -1
+# Disable beep.
+setopt no_beep
 
-    function prompt {
-        $FakeCode = [int]!$global:?
-        Set-StrictMode -Off
-        $LastHistoryEntry = Get-History -Count 1
-        [string]$Result = ""
-        # Skip finishing the command if the first command has not yet started
-        if ($Global:LastHistoryId -ne -1) {
-            if ($LastHistoryEntry.Id -eq $Global:LastHistoryId) {
-                # Don't provide a command line or exit code if there was no history entry (eg. ctrl+c, enter on no command)
-                $Result += "`e]133;D`a"
-            } else {
-                # Command finished exit code
-                $Result += "`e]133;D;${FakeCode}`a"
-            }
-        }
+# Suppress "no matches" message.
+setopt nonomatch
 
-        # Prompt started
-        $Result += "`e]133;A$([char]07)"
+# Disable core dump.
+limit coredumpsize 0
 
-        # Current Working Directory
-        $Result += "`e]9;9;`"${PWD}`"$([char]07)"
+# Set emacs-like keybinding.
+bindkey -e
+## }}
 
-        $Global:OriginalPrompt = ${GitPromptScriptBlock}
-        $Result += $Global:OriginalPrompt.Invoke()
+#
+## Color settings {{
+#
+# Set 24-bit color.
+[[ -n ${WSLENV} ]] || [[ -n ${SSH_CLIENT} ]] && export COLORTERM='truecolor'
+## }}
 
-        # Prompt ended, Command started
-        $Result += "`e]133;B$([char]07)"
-        $Global:LastHistoryId = $LastHistoryEntry.Id
+#
+## Completion {{
+#
+# Set auto completion.
+autoload -Uz compinit && compinit -d "${XDG_CACHE_HOME}/zsh/zcompdump"
 
-        return $Result
-    }
-} elseif ((([System.Diagnostics.Process]::GetCurrentProcess()).Parent).ProcessName -eq 'Code') {
-    function prompt () {
-        & $GitPromptScriptBlock
-    }
-}
+# Colorize completion items.
+zstyle ':completion:*' list-colors di=34 ln=35 ex=31
 
-function which {
-    [CmdletBinding()]
-param (
-    [Parameter(Mandatory=$true)]
-    [string]
-    $CommandName
-)
-begin {}
-Process {
-    (Get-Command -ErrorAction SilentlyContinue -Name ${CommandName}).Definition
-}
-end {}
-}
+# Highlight completion items.
+zstyle ':completion:*:default' menu select=2
+
+# Try to make the completion list smaller.
+setopt list_packed
+
+# Add a trailing slash to name of a directory instead of a space.
+setopt auto_param_slash
+
+# Remove trailing spaces after completion if needed.
+setopt auto_param_keys
+
+# Show the type of each file with a trailing identifying mark.
+setopt list_types
+
+# Automatically use menu completion after the cecond consecutive rquest.
+setopt auto_menu
+
+# Files beginning with a . be matched without explicitly specifying the dot.
+setopt globdots
+
+# The cursor stays there and completion is done from both ends.
+setopt complete_in_word
+
+# Print eight bit characters literally in completion lists.
+setopt print_eight_bit
+
+# Allow comments even in interactive shells
+setopt interactive_comments
+
+# Disable beep when complete list displayed.
+setopt nolistbeep
+## }}
+
+#
+## History {{
+#
+# Location of history file.
+HISTFILE="${XDG_STATE_HOME}/zsh/history"
+
+# Size of history file.
+HISTSIZE=10000
+SAVEHIST=10000
+
+# Share command history.
+setopt share_history
+
+# Do not enter command lines into the history list
+# if they are duplicates of the previous event.
+setopt hist_ignore_dups
+
+# If a new command line being added to the history list
+# duplicates an older one, the older command is removed.
+setopt hist_ignore_all_dups
+
+# Remove command lines from the history list
+# when the first charactoer on the line is a space.
+setopt hist_ignore_space
+
+# Remove superfluous blanks from each command line
+# being added to the history list.
+setopt hist_reduce_blanks
+## }}
+
+#
+## Prompt settings {{
+#
+#PROMPT="%B%F{034}[%n@%m%F{004}:%~%F{034}]%#%f%b "
+PROMPT="%F{004}"$'\ue0b6'"%f%B%K{004}%F{023}%n@%m%k%b%K{023}%F{004}"$'\ue0b4'"%f%k%K{023}%F{044} %~%f%k%F{023}"$'\ue0b4'"%f "
+PROMPT2="%F{034}[%_]%#%k%f "
+SPROMPT="%F{034}%r is correct? [n,y,a,e]:%k%f "
+## }}
+
+#
+## Command specific settings {{
+#
+# Disable less history.
+export LESSHISTFILE="-"
+
+# Python
+export PYTHON_HISTORY="${XDG_STATE_HOME}/python_history"
+export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME}/python"
+export PYTHONUSERBASE="${XDG_DATA_HOME}/python"
+
+# pyenv
+if (( ${+commands[pyenv]} )); then
+    [[ ! -d "${XDG_DATA_HOME}/pyenv" ]] && mkdir "${XDG_DATA_HOME}/pyenv"
+    export PYENV_ROOT="${XDG_DATA_HOME}/pyenv"
+    eval "$(pyenv init -)"
+fi
+# }}
+
+#
+## Aliases {{
+#
+alias ll='ls -lAF'
+if (( ${+commands[nvim]} )); then
+    alias vi='nvim'
+    alias vim='nvim'
+    export EDITOR='nvim'
+elif (( ${+commands[vim]} )); then
+    alias vi='vim'
+    export EDITOR='vim'
+fi
+if (( ${+commands[tmux]} )); then
+    [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
+    export TMUX_TMPDIR=/tmp
+fi
+if (( ${+commands[fdfind]} )); then
+    alias fd='fdfind'
+fi
+## }}
+
+# Remove duplicated path frim ${PATH}.
+typeset -U path
+
+# End of zprof
+#if (which zprof > /dev/null) ;then
+#  zprof | less
+#fi
