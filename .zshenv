@@ -1,4 +1,3 @@
-cat .zshenv
 # Start of zprof
 #zmodload zsh/zprof && zprof
 
