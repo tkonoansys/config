@@ -2,13 +2,13 @@
 case ${OSTYPE} in
     linux*)
         # Add path for snap
-        [[ -d /snap/bin ]] && export PATH=/snap/bin:${PATH}
+        [[ -d "/snap/bin" ]] && export PATH="/snap/bin:${PATH}"
         # Disable auto compinit at /etc/zsh/zshrc on Ubuntu.
-        export skip_global_compinit=1
+        [[ -f "/etc/zsh/zshrc" ]] && export skip_global_compinit=1
         # ls color.
         alias ls='ls -h --color=auto --time-style=long-iso'
-        if [[ -f ${XDG_CONFIG_HOME}/dir_colors ]]; then
-            eval $(dircolors ${XDG_CONFIG_HOME}/dir_colors)
+        if [[ -s "${XDG_CONFIG_HOME}/dir_colors" ]]; then
+            eval $(dircolors "${XDG_CONFIG_HOME}/dir_colors")
         else
             export LS_COLORS='di=01;34'
         fi
@@ -16,14 +16,14 @@ case ${OSTYPE} in
 esac
 
 # Add path for local bin.
-[[ -d ${HOME}/.local/bin ]] && export PATH=${HOME}/.local/bin:${PATH}
+[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
 ## }}
 
 #
 ## General settings {{
 #
 # Set language.
-export LANG=en_US.UTF-8
+export LANG='en_US.UTF-8'
 
 # Ignore Ctrl+S.
 stty stop undef
@@ -38,7 +38,7 @@ setopt correct
 # Disable beep.
 setopt no_beep
 
-# Suppress "no matches" message.
+# Suppress "no matches" message. 
 setopt nonomatch
 
 # Disable core dump.
@@ -51,15 +51,15 @@ bindkey -e
 #
 ## Color settings {{
 #
-# Set 24-bit color.
-[[ -n ${WSLENV} ]] || [[ -n ${SSH_CLIENT} ]] && export COLORTERM='truecolor'
+# Set 24-bit color even though WSL or remote.
+[[ -n ${WSLENV} || -n ${SSH_CLIENT} ]] && export COLORTERM='truecolor'
 ## }}
 
 #
 ## Completion {{
 #
 # Set auto completion.
-autoload -Uz compinit && compinit -d ${XDG_CACHE_HOME}/zsh/zcompdump
+autoload -Uz compinit && compinit -d "${XDG_CACHE_HOME}/zsh/.zcompdump"
 
 # Colorize completion items.
 zstyle ':completion:*' list-colors di=34 ln=35 ex=31
@@ -79,7 +79,7 @@ setopt auto_param_keys
 # Show the type of each file with a trailing identifying mark.
 setopt list_types
 
-# Automatically use menu completion after the cecond consecutive rquest.
+# Automatically use menu completion after the second consecutive rquest.
 setopt auto_menu
 
 # Files beginning with a . be matched without explicitly specifying the dot.
@@ -111,20 +111,19 @@ SAVEHIST=10000
 # Share command history.
 setopt share_history
 
-# Do not enter command lines into the history list
-# if they are duplicates of the previous event.
+# Do not enter duplicated command lines into the history list.
 setopt hist_ignore_dups
 
-# If a new command line being added to the history list
-# duplicates an older one, the older command is removed.
+# Remove older duplicated command from the history list.
 setopt hist_ignore_all_dups
 
-# Remove command lines from the history list
-# when the first charactoer on the line is a space.
+# Remove command if first character is space lines from the history list. 
 setopt hist_ignore_space
 
-# Remove superfluous blanks from each command line
-# being added to the history list.
+# Do not add history command to the history list.
+setopt hist_no_store
+
+# Remove superfluous blanks from each command line from the history list.
 setopt hist_reduce_blanks
 ## }}
 
@@ -150,7 +149,7 @@ export PYTHONUSERBASE="${XDG_DATA_HOME}/python"
 
 # pyenv
 if (( ${+commands[pyenv]} )); then
-    [[ ! -d ${XDG_DATA_HOME}/pyenv ]] && mkdir ${XDG_DATA_HOME}/pyenv
+    mkdir -p "${XDG_DATA_HOME}/pyenv"
     export PYENV_ROOT="${XDG_DATA_HOME}/pyenv"
     eval "$(pyenv init -)"
 fi
@@ -159,7 +158,6 @@ fi
 #
 ## Aliases {{
 #
-alias ll='ls -lAF'
 if (( ${+commands[nvim]} )); then
     alias vi='nvim'
     alias vim='nvim'
@@ -170,7 +168,7 @@ elif (( ${+commands[vim]} )); then
 fi
 if (( ${+commands[tmux]} )); then
     [[ -n ${TMUX} ]] && alias ssh='env TERM=xterm-256color ssh'
-    export TMUX_TMPDIR=/tmp
+    export TMUX_TMPDIR='/tmp'
 fi
 if (( ${+commands[fdfind]} )); then
     alias fd='fdfind'
@@ -181,6 +179,4 @@ fi
 typeset -U path
 
 # End of zprof
-#if (which zprof > /dev/null) ;then
-#  zprof | less
-#fi
+#(which zprof > /dev/null) && zprof | less
